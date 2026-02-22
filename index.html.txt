@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Spin & Win</title>
+  <style>
+    :root{
+      --bg:#0b0f1a;
+      --card:#121a2b;
+      --text:#e9eefc;
+      --muted:#a9b3d6;
+      --accent:#7c5cff;
+      --accent2:#00d4ff;
+      --btn:#6d4bff;
+      --btn2:#00c2ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 800px at 50% -20%, rgba(124,92,255,.35), transparent 60%),
+                  radial-gradient(900px 700px at 110% 10%, rgba(0,212,255,.25), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+    }
+    .wrap{
+      width:min(420px, 100%);
+      padding:18px 14px 26px;
+    }
+    .title{
+      text-align:center;
+      font-weight:800;
+      font-size:28px;
+      letter-spacing:.2px;
+      margin:10px 0 14px;
+    }
+
+    .wheelCard{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      padding:16px 14px 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      position:relative;
+      overflow:hidden;
+    }
+    .wheelArea{
+      display:grid;
+      place-items:center;
+      position:relative;
+      padding:10px 0 6px;
+    }
+    canvas{
+      width: 320px;
+      height: 320px;
+      max-width: 86vw;
+      max-height: 86vw;
+      filter: drop-shadow(0 16px 28px rgba(0,0,0,.45));
+    }
+    .pointer{
+      position:absolute;
+      top: 4px;
+      width:0;height:0;
+      border-left:14px solid transparent;
+      border-right:14px solid transparent;
+      border-bottom:26px solid #ffd36a;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
+    }
+    .pointer::after{
+      content:"";
+      position:absolute;
+      left:-7px; top:18px;
+      width:14px;height:14px;
+      background:#ffd36a;
+      border-radius:50%;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+    }
+
+    .btn{
+      width:100%;
+      border:0;
+      padding:14px 16px;
+      border-radius:16px;
+      color:white;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      background: linear-gradient(90deg, var(--btn), var(--btn2));
+      box-shadow: 0 14px 26px rgba(124,92,255,.25);
+      transition: transform .08s ease;
+      margin-top:10px;
+    }
+    .btn:active{ transform: scale(.985); }
+    .btn[disabled]{ opacity:.55; cursor:not-allowed; }
+
+    .sectionTitle{
+      margin:18px 2px 10px;
+      font-weight:800;
+      font-size:16px;
+      color: #f0f4ff;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .reviews{
+      display:grid;
+      gap:10px;
+    }
+    .review{
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px 12px;
+    }
+    .stars{ color:#ffd36a; letter-spacing:1px; font-size:14px; }
+    .quote{ margin:6px 0 0; color:var(--muted); font-size:14px; line-height:1.5; }
+
+    /* Modal */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.58);
+      display:none;
+      place-items:center;
+      padding:18px;
+      z-index:999;
+    }
+    .modal{
+      width:min(420px, 100%);
+      background: #0f1628;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      padding:16px 14px 14px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.55);
+    }
+    .modal h3{
+      margin:2px 0 8px;
+      font-size:18px;
+      font-weight:900;
+    }
+    .modal p{
+      margin:0 0 12px;
+      color: var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+    .cta{
+      display:block;
+      text-align:center;
+      text-decoration:none;
+      padding:12px 14px;
+      border-radius:16px;
+      font-weight:900;
+      color:#07101b;
+      background: linear-gradient(90deg, #ffd36a, #00d4ff);
+    }
+    .close{
+      margin-top:10px;
+      width:100%;
+      background:transparent;
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--text);
+      padding:11px 12px;
+      border-radius:16px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .footnote{
+      margin-top:10px;
+      text-align:center;
+      color: rgba(233,238,252,.55);
+      font-size:12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">Spin & Win!</div>
+
+    <div class="wheelCard">
+      <div class="wheelArea">
+        <div class="pointer" aria-hidden="true"></div>
+        <canvas id="wheel" width="700" height="700"></canvas>
+      </div>
+      <button id="spinBtn" class="btn">Spin Now</button>
+      <div class="footnote">* جرّبها على الموبايل — تصميم Mobile First</div>
+    </div>
+
+    <div class="sectionTitle">⭐ Player Reviews</div>
+    <div class="reviews">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p class="quote">“Unbelievable! I actually got a prize!” – John D.</p>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★☆</div>
+        <p class="quote">“Fun and smooth experience.” – Sarah L.</p>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p class="quote">“I love the spinning sound!” – Mike R.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="backdrop" class="backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 id="winTitle">Congratulations!</h3>
+      <p id="winText"></p>
+      <a id="claimLink" class="cta" href="#" target="_blank" rel="noopener">Claim Your Prize Now</a>
+      <button class="close" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // ====== Customize prizes here ======
+    const prizes = [
+      { label: "iPhone 17 Pro", weight: 1 },
+      { label: "AirPods Pro", weight: 2 },
+      { label: "Apple Watch", weight: 2 },
+      { label: "$50 Gift Card", weight: 4 },
+      { label: "$20 Gift Card", weight: 6 },
+      { label: "Try Again", weight: 8 },
+      { label: "Free Shipping", weight: 5 },
+      { label: "Mystery Box", weight: 2 },
+    ];
+    const CLAIM_URL = "https://example.com/claim"; // غيّر اللينك هنا
+
+    // ====== Wheel drawing ======
+    const canvas = document.getElementById("wheel");
+    const ctx = canvas.getContext("2d");
+    const spinBtn = document.getElementById("spinBtn");
+
+    const backdrop = document.getElementById("backdrop");
+    const winText = document.getElementById("winText");
+    const claimLink = document.getElementById("claimLink");
+    const closeModal = document.getElementById("closeModal");
+
+    const W = canvas.width, H = canvas.height;
+    const cx = W/2, cy = H/2;
+    const radius = Math.min(W,H) * 0.42;
+
+    let rotation = 0;          // radians
+    let spinning = false;
+
+    function pickWeightedIndex(items){
+      const total = items.reduce((s,x)=>s + (x.weight ?? 1), 0);
+      let r = Math.random() * total;
+      for (let i=0;i<items.length;i++){
+        r -= (items[i].weight ?? 1);
+        if (r <= 0) return i;
+      }
+      return items.length - 1;
+    }
+
+    function drawWheel(){
+      ctx.clearRect(0,0,W,H);
+
+      // Glow ring
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.beginPath();
+      ctx.arc(0,0,radius+28,0,Math.PI*2);
+      ctx.strokeStyle = "rgba(124,92,255,.18)";
+      ctx.lineWidth = 36;
+      ctx.stroke();
+      ctx.restore();
+
+      const n = prizes.length;
+      const arc = (Math.PI*2)/n;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rotation);
+
+      for (let i=0; i<n; i++){
+        const start = i*arc;
+        const end = start + arc;
+
+        // Segment
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.arc(0,0,radius,start,end);
+        ctx.closePath();
+
+        // Alternating colors (no hard-coded palette needed, just 2 tones)
+        const even = i % 2 === 0;
+        ctx.fillStyle = even ? "rgba(124,92,255,.92)" : "rgba(0,212,255,.82)";
+        ctx.fill();
+
+        // Divider line
+        ctx.strokeStyle = "rgba(255,255,255,.16)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Text
+        ctx.save();
+        ctx.rotate(start + arc/2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "rgba(7,16,27,.95)";
+        ctx.font = "900 26px system-ui, -apple-system, Segoe UI, Arial";
+        ctx.fillText(prizes[i].label, radius - 18, 10);
+        ctx.restore();
+      }
+
+      // Center cap
+      ctx.beginPath();
+      ctx.arc(0,0,78,0,Math.PI*2);
+      ctx.fillStyle = "rgba(15,22,40,.95)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,.14)";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(233,238,252,.92)";
+      ctx.font = "900 24px system-ui, -apple-system, Segoe UI, Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("SPIN", 0, 8);
+
+      ctx.restore();
+    }
+
+    // Map the pointer (top) to winning index based on final rotation
+    function getIndexFromRotation(rot){
+      const n = prizes.length;
+      const arc = (Math.PI*2)/n;
+
+      // Pointer at -90deg (top). We consider wheel rotated by rot.
+      // Convert to angle in [0, 2π)
+      let angle = (-Math.PI/2 - rot) % (Math.PI*2);
+      if (angle < 0) angle += Math.PI*2;
+
+      const idx = Math.floor(angle / arc);
+      return idx;
+    }
+
+    function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+    function spin(){
+      if (spinning) return;
+      spinning = true;
+      spinBtn.disabled = true;
+
+      // Choose target prize index (weighted)
+      const targetIndex = pickWeightedIndex(prizes);
+
+      const n = prizes.length;
+      const arc = (Math.PI*2)/n;
+
+      // We want wheel to stop such that pointer lands on targetIndex.
+      // Find current "index under pointer"
+      const currentIndex = getIndexFromRotation(rotation);
+
+      // Compute delta (how many segments to rotate to reach target)
+      // rotation is in radians; increasing rotation rotates wheel clockwise visually.
+      // We'll add multiple full spins for effect.
+      const spins = 6 + Math.floor(Math.random()*3); // 6..8 full rotations
+
+      // Compute angle needed so that getIndexFromRotation(newRot) == targetIndex
+      // We'll brute target angle: we need (-pi/2 - newRot) in [target*arc, (target+1)*arc)
+      // Choose center of that segment:
+      const targetAngleCenter = (targetIndex + 0.5) * arc;
+      // Solve for newRot: (-pi/2 - newRot) mod 2pi = targetAngleCenter
+      // => newRot = -pi/2 - targetAngleCenter  (plus 2pi*k)
+      let desiredRot = -Math.PI/2 - targetAngleCenter;
+      // Add full spins and adjust near current rotation
+      desiredRot += spins * Math.PI*2;
+
+      // Ensure we move forward from current rotation
+      while (desiredRot <= rotation) desiredRot += Math.PI*2;
+
+      const startRot = rotation;
+      const delta = desiredRot - startRot;
+      const duration = 4200; // ms
+
+      const start = performance.now();
+      function tick(now){
+        const t = Math.min(1, (now - start)/duration);
+        const e = easeOutCubic(t);
+        rotation = startRot + delta * e;
+        drawWheel();
+
+        if (t < 1){
+          requestAnimationFrame(tick);
+        } else {
+          spinning = false;
+          spinBtn.disabled = false;
+
+          const winIdx = getIndexFromRotation(rotation);
+          showWin(prizes[winIdx].label);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function showWin(label){
+      winText.textContent = `You won: ${label} 🎉`;
+      claimLink.href = CLAIM_URL;
+      backdrop.style.display = "grid";
+    }
+
+    function hideWin(){
+      backdrop.style.display = "none";
+    }
+
+    spinBtn.addEventListener("click", spin);
+    closeModal.addEventListener("click", hideWin);
+    backdrop.addEventListener("click", (e)=>{ if (e.target === backdrop) hideWin(); });
+
+    // initial render
+    drawWheel();
+  </script>
+</body>
+</html>
