@@ -12,6 +12,7 @@
       --text:#eef2ff;
       --muted:rgba(238,242,255,.72);
       --gold:#ffd36a;
+      --gold2:#ff9f1a;
       --a:#7c5cff;
       --b:#00d4ff;
     }
@@ -28,26 +29,11 @@
       display:flex;
       justify-content:center;
     }
-    .wrap{
-      width:min(460px, 100%);
-      padding:18px 14px 28px;
-    }
-    .header{
-      text-align:center;
-      margin:8px 0 14px;
-    }
-    .header h1{
-      margin:0;
-      font-size:30px;
-      letter-spacing:.2px;
-      font-weight:900;
-    }
-    .header p{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
-    }
+    .wrap{ width:min(460px, 100%); padding:18px 14px 28px; }
+
+    .header{ text-align:center; margin:8px 0 14px; }
+    .header h1{ margin:0; font-size:30px; letter-spacing:.2px; font-weight:900; }
+    .header p{ margin:8px 0 0; color:var(--muted); font-size:14px; line-height:1.5; }
 
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
@@ -93,9 +79,7 @@
       font-weight:950;
       letter-spacing:.2px;
     }
-    .timer{
-      font-variant-numeric: tabular-nums;
-    }
+    .timer{ font-variant-numeric: tabular-nums; }
     .timer.urgent b{ color: var(--gold); }
 
     .wheelArea{
@@ -130,11 +114,7 @@
       box-shadow: inset 0 -4px 0 rgba(0,0,0,.20);
     }
 
-    .controls{
-      padding:12px 14px 16px;
-      position:relative;
-      z-index:1;
-    }
+    .controls{ padding:12px 14px 16px; position:relative; z-index:1; }
     .btn{
       width:100%;
       border:0;
@@ -147,10 +127,6 @@
       background: linear-gradient(90deg, #ffd36a, #00d4ff);
       box-shadow: 0 16px 34px rgba(0,212,255,.18);
       transition: transform .08s ease, filter .15s ease;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
     }
     .btn:active{ transform: scale(.985); }
     .btn[disabled]{ opacity:.6; cursor:not-allowed; filter:saturate(.6); }
@@ -174,10 +150,7 @@
       align-items:center;
       gap:8px;
     }
-    .reviews{
-      display:grid;
-      gap:10px;
-    }
+    .reviews{ display:grid; gap:10px; }
     .review{
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
@@ -187,26 +160,29 @@
     .stars{ color:var(--gold); letter-spacing:1px; font-size:14px; }
     .quote{ margin:6px 0 0; color:var(--muted); font-size:14px; line-height:1.55; }
 
-    /* Modal */
-    .backdrop{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.62);
-      display:none;
-      place-items:center;
-      padding:18px;
-      z-index:999;
-    }
+    /* ====== Winner Modal (like your image) ====== */
     .modal{
-      width:min(440px, 100%);
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+      padding:18px;
+    }
+    .modal-box{
+      width:min(420px, 100%);
       background: linear-gradient(180deg, rgba(18,26,45,.96), rgba(10,16,33,.96));
       border:1px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      padding:16px 14px 14px;
+      border-radius:26px;
+      padding:18px 16px 16px;
       box-shadow: 0 24px 80px rgba(0,0,0,.65);
       position:relative;
       overflow:hidden;
+      text-align:center;
+      animation: pop .35s ease;
     }
-    .modal::before{
+    .modal-box::before{
       content:"";
       position:absolute; inset:-30% -30%;
       background:
@@ -215,34 +191,46 @@
       transform: rotate(6deg);
       pointer-events:none;
     }
-    .modal h3{
-      margin:2px 0 8px;
+    @keyframes pop{
+      from{ transform: scale(.88); opacity:0; }
+      to{ transform: scale(1); opacity:1; }
+    }
+    .modal-title{
+      margin:0 0 10px;
       font-size:18px;
       font-weight:950;
       position:relative;
       z-index:1;
     }
-    .modal p{
-      margin:0 0 12px;
-      color: rgba(238,242,255,.76);
-      line-height:1.6;
+    .modal-sub{
+      margin:0 0 14px;
+      color: rgba(238,242,255,.82);
       font-size:14px;
       position:relative;
       z-index:1;
     }
-    .cta{
+    .iphone-img{
+      width:min(240px, 78vw);
+      margin: 6px auto 16px;
       display:block;
-      text-align:center;
-      text-decoration:none;
-      padding:12px 14px;
-      border-radius:18px;
-      font-weight:950;
-      color:#07101b;
-      background: linear-gradient(90deg, #ffd36a, #00d4ff);
+      filter: drop-shadow(0 22px 30px rgba(0,0,0,.55));
       position:relative;
       z-index:1;
     }
-    .close{
+    .claim-btn{
+      display:block;
+      width:100%;
+      padding:14px 14px;
+      border-radius:18px;
+      font-weight:950;
+      text-decoration:none;
+      color:#07101b;
+      background: linear-gradient(90deg, var(--gold), var(--gold2));
+      box-shadow: 0 14px 34px rgba(255,165,0,.25);
+      position:relative;
+      z-index:1;
+    }
+    .close-btn{
       margin-top:10px;
       width:100%;
       background:transparent;
@@ -274,7 +262,7 @@
 
     <div class="card">
       <div class="topBar">
-        <div class="pill timer" id="timerPill" aria-live="polite">
+        <div class="pill timer" id="timerPill">
           Offer ends in <b id="timerText">00:00</b>
         </div>
         <div class="pill">
@@ -298,29 +286,25 @@
 
     <div class="sectionTitle">⭐ Player Reviews</div>
     <div class="reviews">
-      <div class="review">
-        <div class="stars">★★★★★</div>
-        <p class="quote">“Looks premium and feels smooth.”</p>
-      </div>
-      <div class="review">
-        <div class="stars">★★★★☆</div>
-        <p class="quote">“Fast on mobile and very clean UI.”</p>
-      </div>
-      <div class="review">
-        <div class="stars">★★★★★</div>
-        <p class="quote">“Great experience — easy to claim.”</p>
-      </div>
+      <div class="review"><div class="stars">★★★★★</div><p class="quote">“Looks premium and feels smooth.”</p></div>
+      <div class="review"><div class="stars">★★★★☆</div><p class="quote">“Fast on mobile and very clean UI.”</p></div>
+      <div class="review"><div class="stars">★★★★★</div><p class="quote">“Easy to claim — love the design.”</p></div>
     </div>
   </div>
 
   <canvas id="confetti"></canvas>
 
-  <div id="backdrop" class="backdrop" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h3>🎉 Congratulations!</h3>
-      <p id="winText"></p>
-      <a id="claimLink" class="cta" href="#" target="_blank" rel="noopener">Claim Your Prize</a>
-      <button class="close" id="closeModal">Close</button>
+  <!-- Winner Modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <h3 class="modal-title">🎉 Congratulations!</h3>
+      <p class="modal-sub">You won: <strong>iPhone 17 Pro Max (Orange)</strong></p>
+
+      <!-- Orange iPhone image (embedded as data URL) -->
+      <img class="iphone-img" id="iphoneImg" alt="iPhone 17 Pro Max Orange" />
+
+      <a class="claim-btn" id="claimBtn" target="_blank" rel="noopener">Claim Your Prize</a>
+      <button class="close-btn" id="closeBtn">Close</button>
     </div>
   </div>
 
@@ -330,20 +314,22 @@
       "https://adsmain.bountyads.store/?utm_medium=3d1d7316ec47204aa0feb2bc826e56315d8a1c70&utm_campaign=spinn";
 
     const MAX_ATTEMPTS = 1;
+    const OFFER_SECONDS = 5 * 60; // 5 minutes
 
-    // Countdown duration (change if you want): e.g. 10 minutes => 10 * 60
-    const OFFER_SECONDS = 5 * 60;
-
-    // ✅ NO "Try Again" here (always wins)
-    const prizes = [
-      { label: "iPhone",         weight: 1  },
-      { label: "AirPods",        weight: 2  },
-      { label: "Apple Watch",    weight: 2  },
-      { label: "$50 Gift Card",  weight: 4  },
-      { label: "$20 Gift Card",  weight: 6  },
-      { label: "Free Shipping",  weight: 5  },
-      { label: "Mystery Box",    weight: 2  },
+    // Wheel labels (for realism). Result will ALWAYS be iPhone 17 Pro Max (Orange).
+    const wheelLabels = [
+      "iPhone",
+      "AirPods",
+      "Apple Watch",
+      "$50 Gift Card",
+      "Free Shipping",
+      "Mystery Box",
+      "$20 Gift Card",
+      "VIP Reward"
     ];
+
+    // Always land on the segment that says "iPhone"
+    const fixedLabel = "iPhone";
 
     // ================== ELEMENTS ==================
     const canvas = document.getElementById("wheel");
@@ -356,10 +342,10 @@
     const timerPill = document.getElementById("timerPill");
     const timerText = document.getElementById("timerText");
 
-    const backdrop = document.getElementById("backdrop");
-    const winText = document.getElementById("winText");
-    const claimLink = document.getElementById("claimLink");
-    const closeModal = document.getElementById("closeModal");
+    const modal = document.getElementById("modal");
+    const closeBtn = document.getElementById("closeBtn");
+    const claimBtn = document.getElementById("claimBtn");
+    const iphoneImg = document.getElementById("iphoneImg");
 
     const confettiCanvas = document.getElementById("confetti");
     const c2x = confettiCanvas.getContext("2d");
@@ -376,28 +362,59 @@
     let offerEndsAt = Date.now() + OFFER_SECONDS * 1000;
     let offerActive = true;
 
+    // ================== INLINE iPhone ORANGE IMAGE (simple vector-like PNG via SVG data) ==================
+    // This is an embedded SVG image (data URL), so you don't need external hosting.
+    const iphoneOrangeSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="540" height="520" viewBox="0 0 540 520">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffcf7a"/>
+            <stop offset="0.55" stop-color="#ff7a00"/>
+            <stop offset="1" stop-color="#c94b00"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0b0f1a"/>
+            <stop offset="1" stop-color="#1b2a5a"/>
+          </linearGradient>
+          <filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#000" flood-opacity="0.45"/>
+          </filter>
+        </defs>
+
+        <!-- back phone -->
+        <g filter="url(#ds)">
+          <rect x="120" y="90" width="210" height="360" rx="34" fill="url(#g1)" stroke="#ffd9a8" stroke-opacity="0.5" stroke-width="4"/>
+          <circle cx="170" cy="140" r="26" fill="#121a2b" opacity="0.85"/>
+          <circle cx="225" cy="155" r="26" fill="#121a2b" opacity="0.85"/>
+          <circle cx="185" cy="200" r="26" fill="#121a2b" opacity="0.85"/>
+          <circle cx="170" cy="140" r="11" fill="#67d6ff" opacity="0.9"/>
+          <circle cx="225" cy="155" r="11" fill="#67d6ff" opacity="0.9"/>
+          <circle cx="185" cy="200" r="11" fill="#67d6ff" opacity="0.9"/>
+          <circle cx="250" cy="210" r="7" fill="#ffffff" opacity="0.7"/>
+          <path d="M220 300c20 26 20 62 0 88c-20-26-20-62 0-88z" fill="#000" opacity="0.14"/>
+        </g>
+
+        <!-- front phone -->
+        <g filter="url(#ds)">
+          <rect x="230" y="70" width="230" height="390" rx="38" fill="#0b0f1a" stroke="#ffffff" stroke-opacity="0.20" stroke-width="4"/>
+          <rect x="248" y="92" width="194" height="344" rx="28" fill="url(#g2)"/>
+          <!-- dynamic island -->
+          <rect x="310" y="96" width="90" height="22" rx="11" fill="#0a0f1a" opacity="0.95"/>
+          <!-- wallpaper -->
+          <path d="M248 250 C310 170, 370 150, 442 200 L442 436 L248 436 Z" fill="#00d4ff" opacity="0.20"/>
+          <path d="M248 310 C330 250, 390 240, 442 280 L442 436 L248 436 Z" fill="#ffd36a" opacity="0.22"/>
+          <path d="M248 200 C320 120, 390 120, 442 160 L442 220 C380 170, 320 180, 248 250 Z" fill="#7c5cff" opacity="0.22"/>
+        </g>
+      </svg>
+    `;
+    iphoneImg.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(iphoneOrangeSvg);
+
     // ================== UTILS ==================
     function clamp01(t){ return Math.max(0, Math.min(1, t)); }
     function easeOutQuint(t){ return 1 - Math.pow(1 - t, 5); }
     function easeOutBack(t){
       const c1 = 1.70158, c3 = c1 + 1;
       return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-    }
-    function pickWeightedIndex(items){
-      const total = items.reduce((s,x)=> s + (x.weight ?? 1), 0);
-      let r = Math.random() * total;
-      for (let i=0;i<items.length;i++){
-        r -= (items[i].weight ?? 1);
-        if (r <= 0) return i;
-      }
-      return items.length - 1;
-    }
-    function getIndexFromRotation(rot){
-      const n = prizes.length;
-      const arc = (Math.PI*2)/n;
-      let angle = (-Math.PI/2 - rot) % (Math.PI*2);
-      if (angle < 0) angle += Math.PI*2;
-      return Math.floor(angle / arc);
     }
     function fmtTime(ms){
       const s = Math.max(0, Math.ceil(ms/1000));
@@ -409,6 +426,13 @@
       offerActive = active;
       statusText.textContent = active ? "Active" : "Ended";
       spinBtn.disabled = !active || spinning || attemptsLeft <= 0;
+    }
+    function getIndexFromRotation(rot){
+      const n = wheelLabels.length;
+      const arc = (Math.PI*2)/n;
+      let angle = (-Math.PI/2 - rot) % (Math.PI*2);
+      if (angle < 0) angle += Math.PI*2;
+      return Math.floor(angle / arc);
     }
 
     // ================== DRAW WHEEL ==================
@@ -435,7 +459,7 @@
       ctx.stroke();
       ctx.restore();
 
-      const n = prizes.length;
+      const n = wheelLabels.length;
       const arc = (Math.PI*2)/n;
 
       ctx.save();
@@ -494,7 +518,7 @@
         ctx.font = "900 28px system-ui, -apple-system, Segoe UI, Arial";
         ctx.shadowColor = "rgba(0,0,0,.35)";
         ctx.shadowBlur = 10;
-        ctx.fillText(prizes[i].label, radius - 20, 10);
+        ctx.fillText(wheelLabels[i], radius - 20, 10);
         ctx.restore();
       }
 
@@ -575,23 +599,11 @@
       requestAnimationFrame(tick);
     }
 
-    // ================== MODAL ==================
-    function showWin(label){
-      winText.textContent = `You won: ${label} 🎉`;
-      claimLink.href = CLAIM_URL;
-      backdrop.style.display = "grid";
-      launchConfetti();
-    }
-    function hideWin(){ backdrop.style.display = "none"; }
-    backdrop.addEventListener("click", (e)=>{ if (e.target === backdrop) hideWin(); });
-    closeModal.addEventListener("click", hideWin);
-
     // ================== TIMER ==================
     function tickTimer(){
       const msLeft = offerEndsAt - Date.now();
       timerText.textContent = fmtTime(msLeft);
       timerPill.classList.toggle("urgent", msLeft <= 30000 && msLeft > 0);
-
       if (msLeft <= 0){
         timerText.textContent = "00:00";
         setOfferActive(false);
@@ -599,27 +611,36 @@
     }
     setInterval(tickTimer, 250);
 
-    // ================== SPIN ==================
+    // ================== MODAL ==================
+    function openModal(){
+      claimBtn.href = CLAIM_URL;
+      modal.style.display = "flex";
+      launchConfetti();
+    }
+    function closeModalFn(){
+      modal.style.display = "none";
+    }
+    modal.addEventListener("click", (e)=>{ if (e.target === modal) closeModalFn(); });
+    closeBtn.addEventListener("click", closeModalFn);
+
+    // ================== SPIN (Always land on iPhone label) ==================
     function spin(){
-      if (!offerActive) return;
-      if (spinning) return;
-      if (attemptsLeft <= 0) return;
+      if (!offerActive || spinning || attemptsLeft <= 0) return;
 
       attemptsLeft--;
       attemptsText.textContent = String(attemptsLeft);
+
       spinning = true;
       spinBtn.disabled = true;
 
-      const targetIndex = pickWeightedIndex(prizes);
-      const n = prizes.length;
+      const n = wheelLabels.length;
       const arc = (Math.PI*2)/n;
 
+      const targetIndex = wheelLabels.indexOf(fixedLabel);
       const targetAngleCenter = (targetIndex + 0.5) * arc;
+
       let desiredRot = -Math.PI/2 - targetAngleCenter;
-
-      const spins = 7 + Math.floor(Math.random()*3); // 7..9
-      desiredRot += spins * Math.PI*2;
-
+      desiredRot += (7 + Math.floor(Math.random()*3)) * Math.PI*2; // 7..9 full spins
       while (desiredRot <= rotation) desiredRot += Math.PI*2;
 
       const startRot = rotation;
@@ -639,8 +660,14 @@
           spinning = false;
           spinBtn.disabled = !offerActive || attemptsLeft <= 0;
 
+          // Safety check: force final index to iPhone (snap if needed)
           const winIdx = getIndexFromRotation(rotation);
-          showWin(prizes[winIdx].label);
+          if (wheelLabels[winIdx] !== fixedLabel){
+            // Snap to correct final angle (no animation)
+            rotation = -Math.PI/2 - targetAngleCenter;
+            drawWheel();
+          }
+          openModal();
         }
       }
       requestAnimationFrame(anim);
