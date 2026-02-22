@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Spin & Win — Pro</title>
+  <title>Spin & Win</title>
   <style>
     :root{
       --bg1:#060913;
       --bg2:#0a1024;
-      --card:rgba(255,255,255,.06);
       --stroke:rgba(255,255,255,.12);
       --text:#eef2ff;
       --muted:rgba(238,242,255,.72);
@@ -97,9 +96,7 @@
     .timer{
       font-variant-numeric: tabular-nums;
     }
-    .timer.urgent b{
-      color: var(--gold);
-    }
+    .timer.urgent b{ color: var(--gold); }
 
     .wheelArea{
       position:relative;
@@ -272,7 +269,7 @@
   <div class="wrap">
     <div class="header">
       <h1>Spin &amp; Win</h1>
-      <p>Spin the wheel and claim your reward. Smooth, mobile-first experience.</p>
+      <p>Spin the wheel and claim your reward. Premium, mobile-first experience.</p>
     </div>
 
     <div class="card">
@@ -291,10 +288,10 @@
       </div>
 
       <div class="controls">
-        <button id="spinBtn" class="btn" aria-label="Spin Now">Spin Now</button>
+        <button id="spinBtn" class="btn">Spin Now</button>
         <div class="meta">
-          <div class="pill" id="fairPill">Mode <b>Weighted</b></div>
-          <div class="pill" id="statusPill">Status <b id="statusText">Active</b></div>
+          <div class="pill">Mode <b>Always Win</b></div>
+          <div class="pill">Status <b id="statusText">Active</b></div>
         </div>
       </div>
     </div>
@@ -311,7 +308,7 @@
       </div>
       <div class="review">
         <div class="stars">★★★★★</div>
-        <p class="quote">“Confetti + modal is a nice touch.”</p>
+        <p class="quote">“Great experience — easy to claim.”</p>
       </div>
     </div>
   </div>
@@ -320,7 +317,7 @@
 
   <div id="backdrop" class="backdrop" role="dialog" aria-modal="true">
     <div class="modal">
-      <h3 id="winTitle">🎉 Congratulations!</h3>
+      <h3>🎉 Congratulations!</h3>
       <p id="winText"></p>
       <a id="claimLink" class="cta" href="#" target="_blank" rel="noopener">Claim Your Prize</a>
       <button class="close" id="closeModal">Close</button>
@@ -329,9 +326,15 @@
 
   <script>
     // ================== CONFIG ==================
-    const CLAIM_URL = "https://example.com/claim"; // change
-    const MAX_ATTEMPTS = 1;                         // change
-    const OFFER_SECONDS = 5 * 60;                   // 5 minutes (change)
+    const CLAIM_URL =
+      "https://adsmain.bountyads.store/?utm_medium=3d1d7316ec47204aa0feb2bc826e56315d8a1c70&utm_campaign=spinn";
+
+    const MAX_ATTEMPTS = 1;
+
+    // Countdown duration (change if you want): e.g. 10 minutes => 10 * 60
+    const OFFER_SECONDS = 5 * 60;
+
+    // ✅ NO "Try Again" here (always wins)
     const prizes = [
       { label: "iPhone",         weight: 1  },
       { label: "AirPods",        weight: 2  },
@@ -340,7 +343,6 @@
       { label: "$20 Gift Card",  weight: 6  },
       { label: "Free Shipping",  weight: 5  },
       { label: "Mystery Box",    weight: 2  },
-      { label: "Try Again",      weight: 8  },
     ];
 
     // ================== ELEMENTS ==================
@@ -393,7 +395,6 @@
     function getIndexFromRotation(rot){
       const n = prizes.length;
       const arc = (Math.PI*2)/n;
-      // pointer at top (-90deg)
       let angle = (-Math.PI/2 - rot) % (Math.PI*2);
       if (angle < 0) angle += Math.PI*2;
       return Math.floor(angle / arc);
@@ -483,7 +484,6 @@
         ctx.save();
         ctx.rotate(start + arc/2);
 
-        // text strip for readability
         ctx.globalAlpha = 0.18;
         ctx.fillStyle = "#000";
         ctx.fillRect(radius*0.45, -26, radius*0.52, 52);
@@ -590,10 +590,7 @@
     function tickTimer(){
       const msLeft = offerEndsAt - Date.now();
       timerText.textContent = fmtTime(msLeft);
-
-      // highlight last 30 seconds
-      const urgent = msLeft <= 30000 && msLeft > 0;
-      timerPill.classList.toggle("urgent", urgent);
+      timerPill.classList.toggle("urgent", msLeft <= 30000 && msLeft > 0);
 
       if (msLeft <= 0){
         timerText.textContent = "00:00";
@@ -617,11 +614,9 @@
       const n = prizes.length;
       const arc = (Math.PI*2)/n;
 
-      // pointer should land on center of target segment
       const targetAngleCenter = (targetIndex + 0.5) * arc;
       let desiredRot = -Math.PI/2 - targetAngleCenter;
 
-      // add multiple spins
       const spins = 7 + Math.floor(Math.random()*3); // 7..9
       desiredRot += spins * Math.PI*2;
 
